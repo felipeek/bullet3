@@ -1107,6 +1107,7 @@ void OpenGLGuiHelper::syncPhysicsToGraphics(const btDiscreteDynamicsWorld* rbWor
 	}
 }
 
+
 void OpenGLGuiHelper::render(const btDiscreteDynamicsWorld* rbWorld)
 {
 	if (m_data->m_vrMode)

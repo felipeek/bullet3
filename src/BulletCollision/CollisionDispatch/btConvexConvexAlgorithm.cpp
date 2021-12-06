@@ -266,12 +266,14 @@ struct btPerturbedContactResult : public btManifoldResult
 };
 
 extern btScalar gContactBreakingThreshold;
+btConvexConvexAlgorithm* alg;
 
 //
 // Convex-Convex collision algorithm
 //
 void btConvexConvexAlgorithm ::processCollision(const btCollisionObjectWrapper* body0Wrap, const btCollisionObjectWrapper* body1Wrap, const btDispatcherInfo& dispatchInfo, btManifoldResult* resultOut)
 {
+    alg = this;
 	if (!m_manifoldPtr)
 	{
 		//swapped?

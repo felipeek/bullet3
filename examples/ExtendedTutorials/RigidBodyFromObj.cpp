@@ -48,6 +48,9 @@ struct RigidBodyFromObjExample : public CommonRigidBodyBase
 	}
 };
 
+#include "BulletCollision/CollisionDispatch/btConvexConvexAlgorithm.h"
+extern btConvexConvexAlgorithm* alg;
+
 void RigidBodyFromObjExample::initPhysics()
 {
 	m_guiHelper->setUpAxis(1);
@@ -72,7 +75,7 @@ void RigidBodyFromObjExample::initPhysics()
 	}
 
 	//load our obj mesh
-	const char* fileName = "teddy.obj";  //sphere8.obj";//sponza_closed.obj";//sphere8.obj";
+	const char* fileName = "cube.obj";  //sphere8.obj";//sponza_closed.obj";//sphere8.obj";
 	char relativeFileName[1024];
 	if (b3ResourcePath::findResourcePath(fileName, relativeFileName, 1024,0))
 	{
@@ -87,7 +90,7 @@ void RigidBodyFromObjExample::initPhysics()
 	const GLInstanceVertex& v = glmesh->m_vertices->at(0);
 	btConvexHullShape* shape = new btConvexHullShape((const btScalar*)(&(v.xyzw[0])), glmesh->m_numvertices, sizeof(GLInstanceVertex));
 
-	float scaling[4] = {0.1, 0.1, 0.1, 1};
+	float scaling[4] = {3.0, 3.0, 3.0, 1};
 
 	btVector3 localScaling(scaling[0], scaling[1], scaling[2]);
 	shape->setLocalScaling(localScaling);
@@ -141,6 +144,22 @@ void RigidBodyFromObjExample::initPhysics()
 void RigidBodyFromObjExample::renderScene()
 {
 	CommonRigidBodyBase::renderScene();
+    if (alg != NULL) {
+        const btPersistentManifold* manifold = alg->getManifold();
+        for (int i = 0; i < manifold->getNumContacts(); ++i) {
+            const btManifoldPoint pt = manifold->getContactPoint(i);
+            double positions[3];
+            positions[0] = pt.getPositionWorldOnA().getX();
+            positions[1] = pt.getPositionWorldOnA().getY();
+            positions[2] = pt.getPositionWorldOnA().getZ();
+            double color[4];
+            color[0] = 1.0;
+            color[1] = 0.0;
+            color[2] = 1.0;
+            color[3] = 1.0;
+            m_guiHelper->getRenderInterface()->drawPoint(positions, color, 5.0f);
+        }
+    }
 }
 
 CommonExampleInterface* ET_RigidBodyFromObjCreateFunc(CommonExampleOptions& options)
